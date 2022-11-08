@@ -32,6 +32,8 @@ SQL_GET_EPISODE = "SELECT title, season, e_number, duration, year FROM episodes 
 SQL_GET_ALL_EPISODES = "SELECT title, season, e_number, duration, year FROM episodes ORDER BY season, e_number"
 SQL_GET_EPISODES_FOR_SEASON = "SELECT title, season, e_number, duration, year FROM episodes where season = ? ORDER BY e_number"
 
+SQL_COUNT_EPISODES = "SELECT COUNT(title) FROM episodes;"
+
 KEY_SHOW_NAME = "name"
 
 
@@ -99,6 +101,7 @@ class TvShow:
         except sqlite.IntegrityError:
             raise ValueError(f"Episode {title} s{season_number}e{ep_number} exists")
 
+
     def get_episodes(self, season=None):
         """
         Permet d'accéder aux épisodes en fonction de la saison.
@@ -115,6 +118,17 @@ class TvShow:
 
         return [Episode(*episode_data)
                 for episode_data in cur.fetchall()]
+
+
+    def __len__(self):
+        cur = self._connect.cursor()
+        return cur.execute(SQL_COUNT_EPISODES).fetchone()[0]
+
+
+    def __contains__(self, item:Episode):
+        cur = self._connect.cursor()
+        cur.execute(SQL_GET_EPISODE, (item.season_number, item.number))
+        return bool(cur.fetchone())
 
 
     @property
