@@ -25,6 +25,6 @@ def display_show(show):
     :param show: Dictionnaire dont les valeurs sont des objets série.
     """
     #print("{} - {}h{:02}".format(show.name, *divmod(show.duration, 60)))
-    print(show.name)
+    print(f"{show.name} ({len(show)})")
     for episode in show.episodes:
         print(f" - {episode.title}")

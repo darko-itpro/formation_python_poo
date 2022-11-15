@@ -5,6 +5,18 @@ Ces données sont hétéroclytes, évidemment, dans un "vrai" projet, elles sera
 arborescence fonctionnelle.
 """
 
+import random
+random.seed()
+
+h_potters = [["The Philosopher's Stone", 152, True],
+             ["The Chamber of Secrets", 161, True],
+             ["The Prisoner of Azkaban", 142, False],
+             ["the Goblet of Fire", 157, True],
+             ["the Order of the Phoenix", 138, False],
+             ["the Half-Blood Prince", 153, True],
+             ["the Deathly Hallows – Part 1", 126, False],
+             ["the Deathly Hallows – Part 2", 130, False]]
+
 bbt_s12 = [['The Conjugal Configuration', True, 20],
            ['The Wedding Gift Wormhole', True, 21],
            ['The Procreation Calculation', True, 20],
@@ -30,7 +42,7 @@ bbt_s12 = [['The Conjugal Configuration', True, 20],
            ['The Change Constant', False, 19],
            ['The Stockholm Syndrome', False, 23]]
 
-def load_season(tv_show=None, season=None):
+def load_season(tv_show, season):
     """
     Fonction permétant d'accéder à la saison d'une série.
 
@@ -40,3 +52,36 @@ def load_season(tv_show=None, season=None):
     """
     return bbt_s12
 
+def get_season(user=None):
+    """
+    Fonction permétant d'accéder à la saison d'une série. Si un paramètre user est passé, le retour
+    sera adapté à l'utilisateur
+
+    :param user: un identifiant d'utilisateur.
+    :return: Si un identifant est donné, une liste d'épisodes où un épisode est représenté par un
+    dictionnaire contenant les clefs `title`, `duration` et `viewed`. Si l'épisode n'a pas été vu,
+    cette dernière peut être absente.
+    """
+    if user is None:
+        return [title for title, *_ in bbt_s12]
+    else:
+        return [_to_dict(title, duration, viewed)
+                for title, viewed, duration in bbt_s12]
+
+
+def _to_dict(title, duration, viewed):
+    episode = {"title": title, "duration": duration}
+    if viewed:
+        episode['viewed'] = True
+    else:
+        if random.random() > 0.8:
+            episode['viewed'] = False
+
+    return episode
+
+
+def get_movies():
+    """
+    Fonction permétant d'obtenir une liste de médias.
+    """
+    return h_potters
